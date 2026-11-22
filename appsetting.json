@@ -1,0 +1,11 @@
+{
+    "Security": {
+        "SslMode": "Preferred",
+        "MaxRowLimit": 100,
+        "QueryTimeoutSeconds": 30,
+        "DenyTablees": [
+            "Users"
+        ],
+        "DenyColumns": []
+    }
+}
