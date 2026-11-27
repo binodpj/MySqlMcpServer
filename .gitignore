@@ -87,3 +87,5 @@ Desktop.ini
 *.publishsettings
 appsettings.*.local.json
 .cursor/
+.gemini/
+.agents/
