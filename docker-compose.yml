@@ -1,39 +1,16 @@
 services:
-  mysql:
-    image: mysql:8.4
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-appdb}
-      MYSQL_USER: ${MYSQL_USER:-readonly_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-readonly_password}
-    ports:
-      - "${MYSQL_PORT:-3306}:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\"$$MYSQL_ROOT_PASSWORD\""]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
-
   mysql-mcp-server:
     build:
       context: .
       dockerfile: Dockerfile
     image: mysql-mcp-server:latest
-    depends_on:
-      mysql:
-        condition: service_healthy
     stdin_open: true
     tty: false
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_HOST: ${MYSQL_HOST:-host.docker.internal}
       MYSQL_PORT: ${MYSQL_PORT:-3306}
       MYSQL_USER: ${MYSQL_USER:-readonly_user}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-readonly_password}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-appdb}
-
-volumes:
-  mysql_data:
